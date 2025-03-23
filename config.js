@@ -1,9 +1,10 @@
+// This file will be replaced during the build process
 window.FIREBASE_CONFIG = {
-  apiKey: "AIzaSyCNRUWxYDEaNG0YrFfzfZSmMff2A4XjtcY",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: "",
-  measurementId: ""
+  apiKey: "PLACEHOLDER",
+  authDomain: "PLACEHOLDER",
+  projectId: "PLACEHOLDER",
+  storageBucket: "PLACEHOLDER",
+  messagingSenderId: "PLACEHOLDER",
+  appId: "PLACEHOLDER",
+  measurementId: "PLACEHOLDER"
 };
