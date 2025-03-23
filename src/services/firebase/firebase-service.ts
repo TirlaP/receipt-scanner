@@ -34,6 +34,7 @@ import { firebaseConfig } from './config';
 import { Receipt } from '../../types';
 import { v4 as uuidv4 } from 'uuid';
 
+    console.log("firebaseConfig", firebaseConfig);
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
