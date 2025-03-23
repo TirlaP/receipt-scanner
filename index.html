@@ -31,8 +31,19 @@
     </script>
     <!-- End Single Page Apps for GitHub Pages -->
     
-    <!-- Firebase Configuration (will be replaced during build) -->
-    <script src="/receipt-scanner/config.js"></script>
+    <!-- Firebase Configuration (will be injected during build) -->
+    <script>
+      // This will be replaced during the build process
+      window.FIREBASE_CONFIG = {
+        apiKey: "__FIREBASE_API_KEY__",
+        authDomain: "__FIREBASE_AUTH_DOMAIN__",
+        projectId: "__FIREBASE_PROJECT_ID__",
+        storageBucket: "__FIREBASE_STORAGE_BUCKET__",
+        messagingSenderId: "__FIREBASE_MESSAGING_SENDER_ID__",
+        appId: "__FIREBASE_APP_ID__",
+        measurementId: "__FIREBASE_MEASUREMENT_ID__"
+      };
+    </script>
   </head>
   <body>
     <div id="root"></div>

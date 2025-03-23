@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "build:typecheck": "tsc -b && vite build",
+    "build": "vite build && node scripts/inject-firebase-config.js",
+    "build:typecheck": "tsc -b && vite build && node scripts/inject-firebase-config.js",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",

@@ -39,18 +39,7 @@ jobs:
         
       - name: Setup environment
         run: |
-          # Create runtime config file
-          echo "window.FIREBASE_CONFIG = {" > public/config.js
-          echo "  apiKey: \"${{ secrets.FIREBASE_API_KEY }}\"," >> public/config.js
-          echo "  authDomain: \"${{ secrets.FIREBASE_AUTH_DOMAIN }}\"," >> public/config.js
-          echo "  projectId: \"${{ secrets.FIREBASE_PROJECT_ID }}\"," >> public/config.js
-          echo "  storageBucket: \"${{ secrets.FIREBASE_STORAGE_BUCKET }}\"," >> public/config.js
-          echo "  messagingSenderId: \"${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}\"," >> public/config.js
-          echo "  appId: \"${{ secrets.FIREBASE_APP_ID }}\"," >> public/config.js
-          echo "  measurementId: \"${{ secrets.FIREBASE_MEASUREMENT_ID }}\"" >> public/config.js
-          echo "};" >> public/config.js
-          
-          # Also create .env file for compatibility
+          # Create .env file with Firebase credentials
           echo "VITE_FIREBASE_API_KEY=${{ secrets.FIREBASE_API_KEY }}" >> .env
           echo "VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.FIREBASE_AUTH_DOMAIN }}" >> .env
           echo "VITE_FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }}" >> .env
@@ -58,6 +47,34 @@ jobs:
           echo "VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}" >> .env
           echo "VITE_FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}" >> .env
           echo "VITE_FIREBASE_MEASUREMENT_ID=${{ secrets.FIREBASE_MEASUREMENT_ID }}" >> .env
+          
+          # Also create a script to directly modify the file after build
+          mkdir -p scripts
+          cat > scripts/inject-firebase-config.js << 'EOF'
+          const fs = require('fs');
+          const path = require('path');
+
+          // Get the dist directory
+          const distDir = path.resolve(__dirname, '../dist');
+          const indexFile = path.join(distDir, 'index.html');
+
+          // Read the index.html file
+          let html = fs.readFileSync(indexFile, 'utf8');
+
+          // Replace the placeholders
+          html = html.replace('__FIREBASE_API_KEY__', '${{ secrets.FIREBASE_API_KEY }}');
+          html = html.replace('__FIREBASE_AUTH_DOMAIN__', '${{ secrets.FIREBASE_AUTH_DOMAIN }}');
+          html = html.replace('__FIREBASE_PROJECT_ID__', '${{ secrets.FIREBASE_PROJECT_ID }}');
+          html = html.replace('__FIREBASE_STORAGE_BUCKET__', '${{ secrets.FIREBASE_STORAGE_BUCKET }}');
+          html = html.replace('__FIREBASE_MESSAGING_SENDER_ID__', '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}');
+          html = html.replace('__FIREBASE_APP_ID__', '${{ secrets.FIREBASE_APP_ID }}');
+          html = html.replace('__FIREBASE_MEASUREMENT_ID__', '${{ secrets.FIREBASE_MEASUREMENT_ID }}');
+
+          // Write the modified file
+          fs.writeFileSync(indexFile, html);
+
+          console.log('Firebase configuration injected directly into HTML.');
+          EOF
           
       - name: Build without type checking
         run: npm run build

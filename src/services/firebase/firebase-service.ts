@@ -35,12 +35,38 @@ import { Receipt } from '../../types';
 import { v4 as uuidv4 } from 'uuid';
 
     console.log("firebaseConfig", firebaseConfig);
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-// const storage = getStorage(app); // Commented out since we don't have Firebase Storage
-const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+// Initialize Firebase with error handling
+let app, auth, db, analytics;
+
+try {
+  // Check if we have the required configuration
+  if (!firebaseConfig.projectId) {
+    console.error('Firebase initialization failed: Missing projectId');
+    
+    // Create fallback values to prevent errors
+    app = null;
+    auth = { currentUser: null };
+    db = { collection: () => ({ doc: () => ({ get: () => Promise.resolve(null) }) }) };
+    analytics = null;
+  } else {
+    // Initialize with valid config
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    // const storage = getStorage(app); // Commented out since we don't have Firebase Storage
+    analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+    
+    console.log('Firebase successfully initialized with projectId:', firebaseConfig.projectId);
+  }
+} catch (error) {
+  console.error('Firebase initialization error:', error);
+  
+  // Create fallback values to prevent errors
+  app = null;
+  auth = { currentUser: null };
+  db = { collection: () => ({ doc: () => ({ get: () => Promise.resolve(null) }) }) };
+  analytics = null;
+}
 
 // Helper to convert Date objects to Firestore Timestamps and back
 const convertDates = (receipt: Receipt, toFirestore = true): any => {
