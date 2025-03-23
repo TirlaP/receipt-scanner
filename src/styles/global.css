@@ -1,0 +1,289 @@
+/* Global styles for Receipt Scanner application */
+
+/* Base layout and responsive adjustments */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark theme support */
+.dark-theme {
+  --bg-primary: #1f1f1f;
+  --bg-secondary: #141414;
+  --text-primary: rgba(255, 255, 255, 0.85);
+  --text-secondary: rgba(255, 255, 255, 0.45);
+  --border-color: #303030;
+  --card-bg: #141414;
+}
+
+.dark-theme .ant-layout {
+  background-color: var(--bg-primary);
+}
+
+.dark-theme .ant-layout-sider {
+  background-color: var(--bg-secondary);
+}
+
+.dark-theme .ant-layout-header {
+  background-color: var(--bg-secondary);
+}
+
+.dark-theme .ant-card {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.dark-theme .ant-typography {
+  color: var(--text-primary);
+}
+
+.dark-theme .ant-typography.ant-typography-secondary {
+  color: var(--text-secondary);
+}
+
+.dark-theme .ant-menu-light {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .ant-table {
+    font-size: 12px;
+  }
+  
+  .ant-card-head-title {
+    font-size: 16px;
+  }
+  
+  .ant-statistic-title {
+    font-size: 12px;
+  }
+  
+  .ant-statistic-content {
+    font-size: 20px !important;
+  }
+  
+  .ant-form-item {
+    margin-bottom: 16px;
+  }
+  
+  .scan-button-text {
+    display: none;
+  }
+  
+  .user-name {
+    display: none;
+  }
+}
+
+/* App Logo & Header */
+.app-logo {
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.app-logo:hover {
+  opacity: 0.8;
+}
+
+/* Sidebar styles */
+.app-sidebar {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mobile-sidebar {
+  position: fixed !important;
+  left: 0;
+  height: 100vh;
+  z-index: 1001;
+}
+
+/* Receipt Cards (Grid View) */
+.receipts-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.receipt-card {
+  height: 100%;
+  transition: all 0.3s;
+}
+
+.receipt-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.receipt-card-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.receipt-card-image-container {
+  height: 160px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f2f5;
+}
+
+.receipt-card-image {
+  max-width: 100%;
+  max-height: 160px;
+  object-fit: contain;
+}
+
+.receipt-card-image-placeholder {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f2f5;
+}
+
+.receipt-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.receipt-card-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.receipt-card-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.receipt-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* Dashboard charts */
+.dashboard-container .ant-card {
+  height: 100%;
+}
+
+.dashboard-filters {
+  margin-bottom: 16px;
+}
+
+/* Receipt Detail Page */
+.receipt-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.info-card {
+  height: 100%;
+  background-color: #fafafa;
+}
+
+/* Dropzone for receipt scanning */
+.dropzone {
+  border: 2px dashed #d9d9d9;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.dropzone:hover {
+  border-color: #1890ff;
+}
+
+.dropzone-active {
+  border-color: #1890ff;
+  background-color: #f0f8ff;
+}
+
+/* Receipt Insights */
+.receipt-insights .ant-card {
+  height: 100%;
+  margin-bottom: 16px;
+}
+
+/* Settings Page */
+.settings-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.user-profile-card {
+  margin-bottom: 24px;
+}
+
+/* Auth Pages */
+.login-container, .register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(to right, #f0f2f5, #e6f7ff);
+}
+
+/* Help Drawer */
+.help-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.help-section {
+  margin-bottom: 16px;
+}
+
+.help-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.help-item {
+  background-color: #f5f5f5;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Print styles */
+@media print {
+  .ant-layout-sider, .ant-layout-header, .ant-pagination, .ant-btn {
+    display: none !important;
+  }
+  
+  .ant-layout-content {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .ant-card {
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
