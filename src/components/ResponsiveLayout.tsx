@@ -84,14 +84,14 @@ const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({ children }) => {
           />
         )}
         
-        {/* Mobile drawer sidebar with proper styling using className where possible */}
+        {/* Mobile drawer sidebar with full width */}
         {mobileView && (
           <Drawer
             placement="left"
             closable={false}
             onClose={() => setDrawerVisible(false)}
             open={drawerVisible}
-            width={280}
+            width="100%"
             rootClassName="drawer-no-padding"
             className="p-0"
             contentWrapperStyle={{ boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)' }}
@@ -99,10 +99,12 @@ const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({ children }) => {
             bodyStyle={{ padding: 0 }}
             maskClosable={true}
           >
-            <AppSidebar 
-              mobileView={true} 
-              onClose={() => setDrawerVisible(false)} 
-            />
+            <div className="w-full h-full">
+              <AppSidebar 
+                mobileView={true} 
+                onClose={() => setDrawerVisible(false)} 
+              />
+            </div>
           </Drawer>
         )}
         

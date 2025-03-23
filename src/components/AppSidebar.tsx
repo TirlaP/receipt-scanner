@@ -153,15 +153,15 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       collapsed={isSidebarCollapsed}
       onCollapse={handleCollapse}
       theme="light"
-      className={`app-sidebar overflow-y-auto h-screen ${mobileView ? 'fixed' : 'sticky'} top-0 left-0 shadow-md z-40 transition-all duration-200 ${mobileView ? 'z-50' : 'z-30'}`}
-      width={240}
+      className={`app-sidebar overflow-y-auto h-screen ${mobileView ? 'w-full' : 'sticky'} top-0 left-0 shadow-md z-40 transition-all duration-200 ${mobileView ? 'z-50' : 'z-30'}`}
+      width={mobileView ? "100%" : 240}
       trigger={null} // Remove the default trigger
     >
       <div 
         className="app-logo flex justify-center items-center h-16 px-4 border-b border-gray-200 cursor-pointer"
         onClick={() => handleNavigation('/')}
       >
-        {isSidebarCollapsed ? (
+        {isSidebarCollapsed && !mobileView ? (
           <Avatar 
             shape="square" 
             size={40} 
@@ -170,15 +170,15 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
             RS
           </Avatar>
         ) : (
-          <div className="flex items-center">
+          <div className={`flex items-center ${mobileView ? 'justify-center w-full' : ''}`}>
             <Avatar 
               shape="square" 
-              size={40} 
+              size={mobileView ? 48 : 40} 
               className="bg-blue-500 flex items-center justify-center mr-3"
             >
               RS
             </Avatar>
-            <Title level={4} className="m-0 text-blue-500 hidden sm:block">
+            <Title level={4} className={`m-0 text-blue-500 ${mobileView ? 'block' : 'hidden sm:block'}`}>
               Receipt Scanner
             </Title>
           </div>
@@ -187,27 +187,29 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       
       {/* User info section - visible on mobile or non-collapsed sidebar */}
       {!isSidebarCollapsed && currentUser && (
-        <div className="p-4 border-b border-gray-200 flex flex-col items-center md:hidden">
+        <div className={`p-4 border-b border-gray-200 flex flex-col items-center ${mobileView ? 'w-full' : 'md:hidden'}`}>
           <Avatar 
-            size={64}
-            icon={<UserOutlined />}
-            className="bg-blue-500 mb-2"
+            size={mobileView ? 72 : 64}
+            icon={<UserOutlined className="flex items-center justify-center" />}
+            className="bg-blue-500 mb-3"
           />
-          <Text strong className="mb-1">
+          <Text strong className="mb-1 text-lg">
             {currentUser.displayName || currentUser.email?.split('@')[0] || 'User'}
           </Text>
-          <Text type="secondary" className="text-xs">
+          <Text type="secondary" className="text-sm">
             {currentUser.email}
           </Text>
           
-          <div className="mt-4 w-full">
+          <div className="mt-6 w-full max-w-xs">
             <Button 
               type="primary" 
               danger 
-              icon={<LogoutOutlined />} 
               onClick={handleSignOut}
+              size={mobileView ? "large" : "middle"}
               block
+              className="flex items-center justify-center"
             >
+              <LogoutOutlined className="mr-1" />
               Sign Out
             </Button>
           </div>
@@ -219,11 +221,12 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         mode="inline"
         selectedKeys={getSelectedKey()}
         items={menuItems}
-        style={{ borderRight: 0 }}
+        className={`border-0 ${mobileView ? 'text-base' : ''}`}
+        style={mobileView ? { fontSize: '16px' } : { borderRight: 0 }}
       />
       
       <div 
-        className={`sidebar-footer sticky bottom-0 w-full ${isSidebarCollapsed ? 'py-4' : 'p-4'} border-t border-gray-200 flex flex-col items-center justify-center gap-2 ${isDarkMode ? 'bg-gray-900' : 'bg-white'} mt-auto`}
+        className={`sidebar-footer sticky bottom-0 w-full ${isSidebarCollapsed ? 'py-4' : 'p-4'} border-t border-gray-200 flex ${mobileView ? 'flex-row justify-around' : 'flex-col items-center'} gap-2 ${isDarkMode ? 'bg-gray-900' : 'bg-white'} mt-auto`}
       >
         {/* Cloud sync status */}
         {currentUser && (
