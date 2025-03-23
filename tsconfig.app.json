@@ -23,5 +23,5 @@
     "noFallthroughCasesInSwitch": false,
     "noUncheckedSideEffectImports": false
   },
-  "include": ["src"]
+  "include": ["src", "src/types/global.d.ts"]
 }
