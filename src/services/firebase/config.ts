@@ -1,23 +1,13 @@
-// Firebase configuration using runtime and environment variables
-export const firebaseConfig = typeof window !== 'undefined' && window.FIREBASE_CONFIG
-  ? {
-      apiKey: window.FIREBASE_CONFIG.apiKey || import.meta.env.VITE_FIREBASE_API_KEY || '',
-      authDomain: window.FIREBASE_CONFIG.authDomain || import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || '',
-      projectId: window.FIREBASE_CONFIG.projectId || import.meta.env.VITE_FIREBASE_PROJECT_ID || '',
-      storageBucket: window.FIREBASE_CONFIG.storageBucket || import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || '',
-      messagingSenderId: window.FIREBASE_CONFIG.messagingSenderId || import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '',
-      appId: window.FIREBASE_CONFIG.appId || import.meta.env.VITE_FIREBASE_APP_ID || '',
-      measurementId: window.FIREBASE_CONFIG.measurementId || import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || ''
-    }
-  : {
-      apiKey: import.meta.env.VITE_FIREBASE_API_KEY || '',
-      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || '',
-      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || '',
-      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || '',
-      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '',
-      appId: import.meta.env.VITE_FIREBASE_APP_ID || '',
-      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || ''
-    };
+// Firebase configuration - HARDCODED VALUES FOR DIRECT DEPLOYMENT
+export const firebaseConfig = {
+  apiKey: "AIzaSyCNRUWxYDEaNG0YrFfzfZSmMff2A4XjtcY",
+  authDomain: "receipt-scanner-petru.firebaseapp.com",
+  projectId: "receipt-scanner-petru",
+  storageBucket: "receipt-scanner-petru.appspot.com",
+  messagingSenderId: "640055404069",
+  appId: "1:640055404069:web:4e0fb17f07ecb904e9e04e",
+  measurementId: "G-R0XHK3B6F3"
+};
 
 // Always log the config to help with debugging
 console.log('Firebase config:', firebaseConfig);
