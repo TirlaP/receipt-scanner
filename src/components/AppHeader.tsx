@@ -106,20 +106,22 @@ const AppHeader: React.FC<AppHeaderProps> = ({
         {showMobileMenu && (
           <Button
             type="text"
-            icon={<MenuOutlined />}
             onClick={onMobileMenuToggle}
-            className="mr-4 md:hidden"
-          />
+            className="mr-4 md:hidden flex items-center justify-center"
+          >
+            <MenuOutlined className="flex items-center justify-center" />
+          </Button>
         )}
         
         {/* Hide hamburger on desktop */}
         {!showMobileMenu && onToggle && (
           <Button
             type="text"
-            icon={<MenuOutlined />}
             onClick={onToggle}
-            className="mr-4 hidden md:block"
-          />
+            className="mr-4 hidden md:block flex items-center justify-center"
+          >
+            <MenuOutlined className="flex items-center justify-center" />
+          </Button>
         )}
         
         <Title level={4} className="m-0 text-base md:text-lg">
@@ -134,12 +136,12 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             <Tooltip title="Scan New Receipt">
               <Button 
                 type="primary" 
-                icon={<ScanOutlined />} 
                 onClick={() => navigate('/scan')}
-                className="scan-button"
+                className="flex items-center justify-center"
                 size={showMobileMenu ? "middle" : "middle"}
               >
-                <span className="scan-button-text">Scan</span>
+                <ScanOutlined className="flex items-center justify-center" />
+                <span className="hidden sm:inline ml-1">Scan</span>
               </Button>
             </Tooltip>
           )}
@@ -149,10 +151,11 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             <Tooltip title="Help">
               <Button
                 type="text"
-                icon={<QuestionCircleOutlined />}
                 onClick={() => setHelpDrawerVisible(true)}
-                className="help-button"
-              />
+                className="hidden md:flex items-center justify-center"
+              >
+                <QuestionCircleOutlined className="flex items-center justify-center" />
+              </Button>
             </Tooltip>
           )}
           
@@ -164,22 +167,24 @@ const AppHeader: React.FC<AppHeaderProps> = ({
                 trigger={['click']}
                 placement="bottomRight"
               >
-                <Button type="text" className="user-dropdown-button">
-                  <Space>
-                    <Avatar 
-                      size="small" 
-                      icon={<UserOutlined />} 
-                      className="bg-blue-500"
-                    />
-                    <span className="user-name">
-                      {currentUser.displayName || currentUser.email?.split('@')[0] || 'User'}
-                    </span>
-                  </Space>
+                <Button type="text" className="flex items-center justify-center">
+                  <Avatar 
+                    size="small" 
+                    icon={<UserOutlined className="flex items-center justify-center" />} 
+                    className="bg-blue-500 flex items-center justify-center"
+                  />
+                  <span className="hidden sm:inline ml-1">
+                    {currentUser.displayName || currentUser.email?.split('@')[0] || 'User'}
+                  </span>
                 </Button>
               </Dropdown>
             </div>
           ) : (
-            <Button type="link" onClick={() => navigate('/login')}>
+            <Button 
+              type="link" 
+              onClick={() => navigate('/login')}
+              className="flex items-center justify-center"
+            >
               Sign In
             </Button>
           )}
