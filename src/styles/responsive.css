@@ -1,0 +1,127 @@
+/* Responsive Tailwind Styles */
+
+/* Base Mobile Container Styles */
+.mobile-container {
+  @apply max-w-full mx-auto px-4;
+}
+
+/* Responsive Tables */
+.responsive-table-container {
+  @apply w-full overflow-x-auto -mx-4 px-4 pb-4;
+}
+
+.responsive-table-container table {
+  @apply min-w-full;
+}
+
+/* Mobile Scan Interface */
+.mobile-scan-wrapper {
+  @apply flex flex-col items-center justify-center;
+}
+
+.camera-controls {
+  @apply fixed bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-800 flex justify-center items-center gap-4 z-10 shadow-lg;
+}
+
+.mobile-camera-button {
+  @apply w-16 h-16 rounded-full flex items-center justify-center border-4 border-blue-500;
+}
+
+/* Receipt Card Grid */
+.receipt-card-row {
+  @apply mt-4;
+}
+
+.receipt-card {
+  @apply h-full transition-all duration-300 hover:shadow-md;
+}
+
+.receipt-card-image-container {
+  @apply h-32 flex items-center justify-center overflow-hidden bg-gray-100 dark:bg-gray-700;
+}
+
+.receipt-card-image {
+  @apply object-cover h-full w-full;
+}
+
+.receipt-card-image-placeholder {
+  @apply h-32 flex items-center justify-center bg-gray-100 dark:bg-gray-700;
+}
+
+.receipt-card-content {
+  @apply flex flex-col gap-2;
+}
+
+.receipt-card-header {
+  @apply flex flex-col;
+}
+
+.receipt-card-total {
+  @apply flex justify-between items-center;
+}
+
+.receipt-card-tags {
+  @apply flex flex-wrap gap-1 mt-2;
+}
+
+/* Responsive Filter Controls */
+.receipts-list-controls {
+  @apply flex flex-col sm:flex-row justify-between gap-4;
+}
+
+.search-and-filter {
+  @apply flex flex-col sm:flex-row gap-2;
+}
+
+.bulk-actions {
+  @apply overflow-x-auto py-2;
+}
+
+.active-filters {
+  @apply overflow-x-auto py-2;
+}
+
+/* Mobile Camera Interface */
+.mobile-camera-container {
+  @apply fixed inset-0 z-50 bg-black flex flex-col items-center justify-center;
+}
+
+.camera-preview {
+  @apply w-full h-full object-cover;
+}
+
+/* Mobile Navigation Tweaks */
+.mobile-menu-button {
+  @apply md:hidden;
+}
+
+.menu-toggle-button {
+  @apply block md:hidden;
+}
+
+.scan-button-text {
+  @apply hidden sm:inline;
+}
+
+.user-name {
+  @apply hidden sm:inline;
+}
+
+.help-button {
+  @apply hidden sm:block;
+}
+
+.user-dropdown-button {
+  @apply min-w-0;
+}
+
+/* Responsive Form Elements */
+.responsive-form-item {
+  @apply w-full;
+}
+
+@media (min-width: 640px) {
+  .responsive-form-item {
+    @apply w-auto;
+  }
+}

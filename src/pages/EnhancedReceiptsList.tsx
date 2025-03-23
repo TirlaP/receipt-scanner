@@ -770,64 +770,76 @@ const EnhancedReceiptsList: React.FC<EnhancedReceiptsListProps> = ({
         {viewMode === 'grid' ? (
           renderGridView()
         ) : (
-          <Table
-            dataSource={filteredReceipts}
-            columns={columns}
-            rowKey="id"
-            loading={loading}
-            pagination={{ 
-              pageSize: 10,
-              showSizeChanger: true,
-              showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} receipts`
-            }}
-            rowSelection={rowSelection}
-            expandable={{
-              expandedRowRender: (record) => (
-                <div style={{ padding: '0 48px' }}>
-                  <Title level={5}>Receipt Items</Title>
-                  <Table
-                    dataSource={record.items}
-                    columns={[
-                      {
-                        title: 'Item',
-                        dataIndex: 'name',
-                        key: 'name',
-                      },
-                      {
-                        title: 'Category',
-                        dataIndex: 'category',
-                        key: 'category',
-                        render: (text: string) => text || 'Uncategorized',
-                      },
-                      {
-                        title: 'Quantity',
-                        dataIndex: 'quantity',
-                        key: 'quantity',
-                        render: (qty: number, record: any) => `${qty} ${record.unit || ''}`,
-                      },
-                      {
-                        title: 'Price',
-                        dataIndex: 'price',
-                        key: 'price',
-                        render: (price: number) => price.toFixed(2),
-                      },
-                      {
-                        title: 'Total',
-                        key: 'total',
-                        render: (_, record) => (record.totalAmount ?? (record.price * record.quantity)).toFixed(2),
-                      },
-                    ]}
-                    pagination={false}
-                    rowKey="id"
-                    size="small"
-                  />
-                </div>
-              ),
-            }}
-            locale={{
-              emptyText: <Empty description="No receipts found" />
-            }}
-          />
+          <div className="responsive-table">
+            <Table
+              dataSource={filteredReceipts}
+              columns={columns}
+              rowKey="id"
+              loading={loading}
+              pagination={{ 
+                pageSize: 10,
+                showSizeChanger: true,
+                showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} receipts`,
+                className: "responsive-pagination"
+              }}
+              rowSelection={rowSelection}
+              expandable={{
+                expandedRowRender: (record) => (
+                  <div className="px-4 py-2">
+                    <Title level={5}>Receipt Items</Title>
+                    <div className="responsive-table">
+                      <Table
+                        dataSource={record.items}
+                        columns={[
+                          {
+                            title: 'Item',
+                            dataIndex: 'name',
+                            key: 'name',
+                          },
+                          {
+                            title: 'Category',
+                            dataIndex: 'category',
+                            key: 'category',
+                            render: (text: string) => text || 'Uncategorized',
+                            responsive: ['md'],
+                          },
+                          {
+                            title: 'Qty',
+                            dataIndex: 'quantity',
+                            key: 'quantity',
+                            render: (qty: number, record: any) => `${qty} ${record.unit || ''}`,
+                            width: 80,
+                          },
+                          {
+                            title: 'Price',
+                            dataIndex: 'price',
+                            key: 'price',
+                            render: (price: number) => price.toFixed(2),
+                            width: 100,
+                          },
+                          {
+                            title: 'Total',
+                            key: 'total',
+                            render: (_, record) => (record.totalAmount ?? (record.price * record.quantity)).toFixed(2),
+                            width: 100,
+                          },
+                        ]}
+                        pagination={false}
+                        rowKey="id"
+                        size="small"
+                        scroll={{ x: 'max-content' }}
+                      />
+                    </div>
+                  </div>
+                ),
+              }}
+              scroll={{ x: 'max-content' }}
+              locale={{
+                emptyText: <Empty description="No receipts found" />
+              }}
+              className="receipts-table"
+            />
+          </div>
         )}
       </Card>
       

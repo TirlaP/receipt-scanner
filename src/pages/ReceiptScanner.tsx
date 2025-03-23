@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import { 
@@ -15,7 +15,9 @@ import {
   Divider,
   Steps,
   Radio,
-  Tooltip
+  Tooltip,
+  Modal,
+  FloatButton
 } from 'antd';
 import { 
   InboxOutlined, 
@@ -26,7 +28,10 @@ import {
   FormOutlined,
   CloseCircleOutlined,
   CloudOutlined,
-  QuestionCircleOutlined
+  QuestionCircleOutlined,
+  CameraOutlined,
+  CloseOutlined,
+  SwapOutlined
 } from '@ant-design/icons';
 
 import { Receipt } from '../types';
@@ -49,6 +54,119 @@ const ReceiptScanner: React.FC<ReceiptScannerProps> = ({ onAddReceipt, hideTitle
   const [processingStep, setProcessingStep] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [scanMode, setScanMode] = useState<'mindee' | 'manual'>('mindee');
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
+  const [cameraActive, setCameraActive] = useState(false);
+  const [facingMode, setFacingMode] = useState<'environment' | 'user'>('environment');
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  
+  // Check if running on a mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      setIsMobileDevice(isMobile);
+    };
+    
+    checkMobile();
+  }, []);
+  
+  // Handle camera setup and cleanup
+  useEffect(() => {
+    if (cameraActive) {
+      startCamera();
+    } else if (streamRef.current) {
+      stopCamera();
+    }
+    
+    return () => {
+      if (streamRef.current) {
+        stopCamera();
+      }
+    };
+  }, [cameraActive, facingMode]);
+  
+  // Start the camera
+  const startCamera = async () => {
+    try {
+      if (streamRef.current) {
+        stopCamera();
+      }
+      
+      const constraints = {
+        video: {
+          facingMode: facingMode,
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        }
+      };
+      
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      streamRef.current = stream;
+      
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (err) {
+      console.error('Error accessing camera:', err);
+      setCameraActive(false);
+    }
+  };
+  
+  // Stop the camera
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  };
+  
+  // Toggle camera on/off
+  const toggleCamera = () => {
+    setCameraActive(!cameraActive);
+  };
+  
+  // Toggle between front/back camera
+  const toggleCameraFacing = () => {
+    setFacingMode(prev => prev === 'environment' ? 'user' : 'environment');
+  };
+  
+  // Capture a photo from the camera
+  const capturePhoto = () => {
+    if (!videoRef.current || !canvasRef.current) return;
+    
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    
+    // Set canvas dimensions to match video
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    
+    // Draw video frame to canvas
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    // Convert to base64 image
+    const imageData = canvas.toDataURL('image/jpeg', 0.95);
+    setPreview(imageData);
+    setCameraActive(false);
+    
+    // Convert base64 to File for processing
+    fileService.base64ToFile(imageData, 'camera-capture.jpg')
+      .then(file => {
+        processReceipt(file);
+      })
+      .catch(err => {
+        console.error('Error creating file from image:', err);
+        setError('Failed to process camera image.');
+      });
+  };
 
   const processReceipt = async (file: File) => {
     try {
@@ -195,27 +313,92 @@ const ReceiptScanner: React.FC<ReceiptScannerProps> = ({ onAddReceipt, hideTitle
     return baseSteps;
   };
 
+  // Render the camera view for mobile devices
+  const renderCameraView = () => {
+    return (
+      <Modal
+        open={cameraActive}
+        closable={false}
+        footer={null}
+        width="100%"
+        bodyStyle={{ padding: 0, height: '100vh', position: 'relative' }}
+        className="mobile-camera-modal"
+        maskClosable={false}
+        centered
+        styles={{
+          mask: { backdropFilter: 'blur(4px)' },
+          body: { height: '100vh', overflow: 'hidden' }
+        }}
+      >
+        <div className="mobile-camera-container">
+          {/* Hidden canvas for image capture */}
+          <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+          
+          {/* Video preview */}
+          <video 
+            ref={videoRef} 
+            className="camera-preview" 
+            autoPlay 
+            playsInline
+          />
+          
+          {/* Camera controls */}
+          <div className="camera-controls">
+            <Button 
+              className="close-camera-button"
+              shape="circle" 
+              icon={<CloseOutlined />} 
+              onClick={() => setCameraActive(false)}
+              size="large"
+            />
+            
+            <Button
+              className="mobile-camera-button"
+              shape="circle"
+              size="large"
+              onClick={capturePhoto}
+              icon={<CameraOutlined style={{ fontSize: 24 }} />}
+            />
+            
+            <Button
+              className="switch-camera-button"
+              shape="circle"
+              icon={<SwapOutlined />}
+              onClick={toggleCameraFacing}
+              size="large"
+            />
+          </div>
+        </div>
+      </Modal>
+    );
+  };
+
   return (
     <div className="receipt-scanner-container">
-      <Row gutter={[24, 24]}>
+      {/* Render camera UI when active */}
+      {renderCameraView()}
+      
+      <Row gutter={[16, 16]}>
         <Col xs={24} lg={16}>
-          <Card bordered={false}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              {!hideTitle && <Title level={4}>Scan Receipt</Title>}
+          <Card bordered={false} className="rounded-lg shadow-sm">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+              {!hideTitle && <Title level={4} className="m-0">Scan Receipt</Title>}
               <Radio.Group 
                 value={scanMode} 
                 onChange={(e) => setScanMode(e.target.value)}
                 disabled={isProcessing}
                 buttonStyle="solid"
+                size={isMobileDevice ? "middle" : "large"}
+                className="w-full sm:w-auto"
               >
                 <Tooltip title="Process with Mindee Cloud API (best accuracy)">
-                  <Radio.Button value="mindee">
-                    <CloudOutlined /> Mindee API
+                  <Radio.Button value="mindee" className="w-1/2 sm:w-auto text-center">
+                    <CloudOutlined /> <span className="hidden sm:inline">Mindee API</span>
                   </Radio.Button>
                 </Tooltip>
                 <Tooltip title="Create a blank receipt for manual editing">
-                  <Radio.Button value="manual">
-                    <FormOutlined /> Manual
+                  <Radio.Button value="manual" className="w-1/2 sm:w-auto text-center">
+                    <FormOutlined /> <span className="hidden sm:inline">Manual</span>
                   </Radio.Button>
                 </Tooltip>
               </Radio.Group>
@@ -243,40 +426,48 @@ const ReceiptScanner: React.FC<ReceiptScannerProps> = ({ onAddReceipt, hideTitle
               />
             )}
             
+            {/* Mobile Camera Button */}
+            {isMobileDevice && !isProcessing && (
+              <div className="mobile-camera-button-container mb-4 flex justify-center">
+                <Button 
+                  type="primary" 
+                  icon={<CameraOutlined />} 
+                  size="large"
+                  onClick={toggleCamera}
+                  className="w-full sm:w-auto"
+                >
+                  Take Photo with Camera
+                </Button>
+              </div>
+            )}
+            
             <div
               {...getRootProps()}
-              className={`dropzone ${isDragActive ? 'dropzone-active' : ''} ${isProcessing ? 'opacity-50' : ''}`}
-              style={{ 
-                pointerEvents: isProcessing ? 'none' : 'auto',
-                minHeight: 200,
-                border: '2px dashed #d9d9d9',
-                borderRadius: '8px',
-                padding: '20px',
-                textAlign: 'center',
-                cursor: 'pointer',
-                transition: 'border-color 0.3s',
-                borderColor: isDragActive ? '#1890ff' : '#d9d9d9',
-                backgroundColor: isDragActive ? '#f0f8ff' : 'transparent'
-              }}
+              className={`dropzone ${isDragActive ? 'dropzone-active' : ''} ${isProcessing ? 'opacity-50' : ''} 
+                          rounded-lg border-2 border-dashed p-5 text-center cursor-pointer transition-colors
+                          ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-transparent'}`}
+              style={{ pointerEvents: isProcessing ? 'none' : 'auto' }}
             >
               <input {...getInputProps()} />
               
               {isProcessing ? (
-                <div style={{ textAlign: 'center', padding: '20px 0' }}>
+                <div className="py-5 text-center">
                   <Spin
                     indicator={<LoadingOutlined style={{ fontSize: 36 }} spin />}
                   />
-                  <p style={{ marginTop: 16 }}>Processing receipt... {progress}%</p>
+                  <p className="mt-4">Processing receipt... {progress}%</p>
                   
                   <Progress percent={progress} status="active" />
                 </div>
               ) : (
-                <div style={{ textAlign: 'center', padding: '20px 0' }}>
-                  <InboxOutlined style={{ fontSize: 48, color: '#40a9ff' }} />
-                  <p style={{ marginTop: 16, fontSize: 16 }}>
-                    Drag and drop a receipt image here, or click to select file
+                <div className="py-5 text-center">
+                  <InboxOutlined className="text-5xl text-blue-500" />
+                  <p className="mt-4 text-base">
+                    {isMobileDevice 
+                      ? 'Tap to select a receipt image from your gallery' 
+                      : 'Drag and drop a receipt image here, or click to select file'}
                   </p>
-                  <p style={{ color: '#888' }}>
+                  <p className="text-gray-500">
                     Supports PNG, JPG, or WEBP up to 5MB
                   </p>
                 </div>
@@ -286,7 +477,7 @@ const ReceiptScanner: React.FC<ReceiptScannerProps> = ({ onAddReceipt, hideTitle
             {preview && (
               <>
                 <Divider>Receipt Preview</Divider>
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div className="flex justify-center">
                   <Image
                     src={preview}
                     alt="Receipt preview"
@@ -300,7 +491,7 @@ const ReceiptScanner: React.FC<ReceiptScannerProps> = ({ onAddReceipt, hideTitle
         </Col>
         
         <Col xs={24} lg={8}>
-          <Card bordered={false}>
+          <Card bordered={false} className="rounded-lg shadow-sm">
             {isProcessing ? (
               <>
                 <Title level={4}>Processing Status</Title>
@@ -312,14 +503,14 @@ const ReceiptScanner: React.FC<ReceiptScannerProps> = ({ onAddReceipt, hideTitle
               </>
             ) : (
               <>
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+                <div className="flex items-center mb-4">
                   <Title level={4} style={{ margin: 0 }}>
                     {scanMode === 'mindee' 
                       ? 'Mindee API Scanner'
                       : 'Manual Receipt Entry'}
                   </Title>
                   <Tooltip title="Need help choosing a mode?">
-                    <QuestionCircleOutlined style={{ marginLeft: 8, color: '#1890ff' }} />
+                    <QuestionCircleOutlined className="ml-2 text-blue-500" />
                   </Tooltip>
                 </div>
                 
@@ -328,7 +519,7 @@ const ReceiptScanner: React.FC<ReceiptScannerProps> = ({ onAddReceipt, hideTitle
                     <Paragraph>
                       The Mindee API offers the best accuracy and can extract:
                     </Paragraph>
-                    <ul>
+                    <ul className="pl-5">
                       <li>Store name and address</li>
                       <li>Date and time of purchase</li>
                       <li>Total amount and taxes</li>
@@ -348,7 +539,7 @@ const ReceiptScanner: React.FC<ReceiptScannerProps> = ({ onAddReceipt, hideTitle
                 
                 <Divider />
                 <Title level={5}>Tips for Best Results</Title>
-                <ul>
+                <ul className="pl-5">
                   <li>Ensure good lighting when taking the photo</li>
                   <li>Avoid shadows and glare on the receipt</li>
                   <li>Capture the entire receipt in one image</li>
@@ -358,10 +549,10 @@ const ReceiptScanner: React.FC<ReceiptScannerProps> = ({ onAddReceipt, hideTitle
             )}
           </Card>
           
-          {!isProcessing && (
-            <Card bordered={false} style={{ marginTop: 16 }}>
+          {!isProcessing && !isMobileDevice && (
+            <Card bordered={false} className="mt-4 rounded-lg shadow-sm">
               <Title level={5}>Mode Comparison</Title>
-              <div style={{ marginBottom: 8 }}>
+              <div className="mb-2">
                 <Text strong>Mindee API:</Text> Highest accuracy, uses API quota (250 free pages)
               </div>
               <div>
@@ -371,6 +562,14 @@ const ReceiptScanner: React.FC<ReceiptScannerProps> = ({ onAddReceipt, hideTitle
           )}
         </Col>
       </Row>
+      
+      {/* Help button */}
+      <FloatButton
+        icon={<QuestionCircleOutlined />}
+        type="primary"
+        style={{ right: 24, bottom: isMobileDevice ? 84 : 24 }}
+        tooltip="Need help?"
+      />
     </div>
   );
 };

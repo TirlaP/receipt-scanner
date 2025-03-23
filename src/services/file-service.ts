@@ -23,6 +23,37 @@ class FileService {
       reader.readAsDataURL(file);
     });
   }
+  
+  // Convert base64 string to File object for camera captures
+  async base64ToFile(base64String: string, fileName: string): Promise<File> {
+    // Extract the MIME type from the base64 string
+    const matches = base64String.match(/^data:([A-Za-z-+/]+);base64,(.+)$/);
+    
+    if (!matches || matches.length !== 3) {
+      throw new Error('Invalid base64 string format');
+    }
+    
+    const mimeType = matches[1];
+    const base64Data = matches[2];
+    const byteString = atob(base64Data);
+    
+    // Convert base64 to binary
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+    
+    for (let i = 0; i < byteString.length; i++) {
+      uint8Array[i] = byteString.charCodeAt(i);
+    }
+    
+    // Create Blob and File object
+    const blob = new Blob([arrayBuffer], { type: mimeType });
+    
+    // Create File object with current date
+    return new File([blob], fileName, { 
+      type: mimeType,
+      lastModified: Date.now()
+    });
+  }
 
   // Check if file is a valid image
   isValidImage(file: File): boolean {

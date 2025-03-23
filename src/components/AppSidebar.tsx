@@ -166,29 +166,30 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       width={240}
     >
       <div 
-        className="app-logo"
-        style={{ 
-          height: '64px', 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center',
-          padding: '16px',
-          borderBottom: '1px solid #f0f0f0'
-        }}
+        className="app-logo flex justify-center items-center h-16 px-4 border-b border-gray-200 cursor-pointer"
         onClick={() => handleNavigation('/')}
       >
         {isSidebarCollapsed ? (
           <Avatar 
             shape="square" 
             size={40} 
-            style={{ backgroundColor: '#1890ff' }}
+            className="bg-blue-500 flex items-center justify-center"
           >
             RS
           </Avatar>
         ) : (
-          <Title level={4} style={{ margin: 0, color: '#1890ff' }}>
-            Receipt Scanner
-          </Title>
+          <div className="flex items-center">
+            <Avatar 
+              shape="square" 
+              size={40} 
+              className="bg-blue-500 flex items-center justify-center mr-3"
+            >
+              RS
+            </Avatar>
+            <Title level={4} className="m-0 text-blue-500 hidden sm:block">
+              Receipt Scanner
+            </Title>
+          </div>
         )}
       </div>
       
