@@ -90,7 +90,7 @@
   @apply w-full h-full object-cover;
 }
 
-/* Mobile Navigation Tweaks */
+/* Navigation Tweaks */
 .mobile-menu-button {
   @apply md:hidden;
 }
@@ -113,6 +113,57 @@
 
 .user-dropdown-button {
   @apply min-w-0;
+}
+
+/* Fix UI layout in desktop */
+@media (min-width: 768px) {
+  .ant-layout-sider-trigger {
+    display: none !important;
+  }
+  
+  .ant-layout-sider-children {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .sidebar-footer {
+    margin-top: auto;
+  }
+}
+
+/* Prevent overlap and container issues */
+.receipt-detail-container,
+.receipts-list-container,
+.receipt-scanner-container {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Better spacing for form elements */
+.ant-form-item {
+  margin-bottom: 16px;
+}
+
+/* Fix container-in-container issue on mobile */
+@media (max-width: 767px) {
+  .ant-layout-content {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .ant-card {
+    border-radius: 8px;
+    margin: 8px;
+  }
+  
+  .receipt-detail-container .ant-card,
+  .receipts-list-container .ant-card,
+  .receipt-scanner-container .ant-card {
+    margin: 0;
+    border-radius: 0;
+  }
 }
 
 /* Responsive Form Elements */

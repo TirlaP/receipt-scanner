@@ -76,7 +76,7 @@ const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({ children }) => {
       }}
     >
       <Layout className="min-h-screen">
-        {/* Desktop sidebar */}
+        {/* Desktop sidebar - only show on larger screens */}
         {!mobileView && (
           <AppSidebar 
             collapsed={collapsed} 
@@ -84,23 +84,32 @@ const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({ children }) => {
           />
         )}
         
-        {/* Mobile drawer sidebar */}
+        {/* Mobile drawer sidebar with proper styling */}
         {mobileView && (
           <Drawer
             placement="left"
             closable={false}
             onClose={() => setDrawerVisible(false)}
             open={drawerVisible}
-            contentWrapperStyle={{ width: '280px' }}
+            width={280}
             bodyStyle={{ padding: 0 }}
             styles={{
               body: {
                 padding: 0,
               },
               mask: {
-                backdropFilter: 'blur(4px)'
+                backdropFilter: 'blur(2px)'
+              },
+              // Make drawer better integrated with the app
+              wrapper: {
+                top: 0,
+                height: '100%',
+              },
+              content: {
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
               }
             }}
+            maskClosable={true}
           >
             <AppSidebar 
               mobileView={true} 
@@ -109,7 +118,7 @@ const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({ children }) => {
           </Drawer>
         )}
         
-        <Layout>
+        <Layout className="site-layout">
           <AppHeader 
             collapsed={collapsed}
             onToggle={() => setCollapsed(!collapsed)}
@@ -117,10 +126,11 @@ const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({ children }) => {
             onMobileMenuToggle={toggleDrawer}
           />
           <Content 
-            className={`
-              ${mobileView ? 'px-4 py-3' : 'px-6 py-5'} 
+            className={`bg-gray-50 dark:bg-gray-900
+              ${mobileView ? 'p-4' : 'p-6'} 
               min-h-[calc(100vh-64px)]
               ${isScanningPage && mobileView ? 'pb-24' : ''}
+              overflow-x-hidden
             `}
           >
             {children}

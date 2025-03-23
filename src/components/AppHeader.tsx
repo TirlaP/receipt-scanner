@@ -99,34 +99,37 @@ const AppHeader: React.FC<AppHeaderProps> = ({
 
   return (
     <Header 
-      style={{ 
-        background: '#fff', 
-        padding: '0 16px', 
-        boxShadow: '0 1px 4px rgba(0, 0, 0, 0.1)',
-        position: 'sticky',
-        top: 0,
-        zIndex: 1000,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        height: 64
-      }}
+      className="bg-white shadow-sm sticky top-0 z-50 px-4 flex justify-between items-center h-16"
     >
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Button
-          type="text"
-          icon={<MenuOutlined />}
-          onClick={onMobileMenuToggle || onToggle}
-          style={{ marginRight: 16 }}
-          className="menu-toggle-button"
-        />
-        <Title level={4} style={{ margin: 0 }}>
+      <div className="flex items-center">
+        {/* Only show menu toggle on mobile */}
+        {showMobileMenu && (
+          <Button
+            type="text"
+            icon={<MenuOutlined />}
+            onClick={onMobileMenuToggle}
+            className="mr-4 md:hidden"
+          />
+        )}
+        
+        {/* Hide hamburger on desktop */}
+        {!showMobileMenu && onToggle && (
+          <Button
+            type="text"
+            icon={<MenuOutlined />}
+            onClick={onToggle}
+            className="mr-4 hidden md:block"
+          />
+        )}
+        
+        <Title level={4} className="m-0 text-base md:text-lg">
           {getPageTitle()}
         </Title>
       </div>
       
       <div className="header-actions">
-        <Space size="middle">
+        <Space size={showMobileMenu ? "small" : "middle"}>
+          {/* Always show scan button except on scan page */}
           {location.pathname !== '/scan' && (
             <Tooltip title="Scan New Receipt">
               <Button 
@@ -134,40 +137,53 @@ const AppHeader: React.FC<AppHeaderProps> = ({
                 icon={<ScanOutlined />} 
                 onClick={() => navigate('/scan')}
                 className="scan-button"
+                size={showMobileMenu ? "middle" : "middle"}
               >
                 <span className="scan-button-text">Scan</span>
               </Button>
             </Tooltip>
           )}
           
-          <Tooltip title="Help">
-            <Button
-              type="text"
-              icon={<QuestionCircleOutlined />}
-              onClick={() => setHelpDrawerVisible(true)}
-              className="help-button"
-            />
-          </Tooltip>
+          {/* Hide help button on mobile (it's in sidebar) */}
+          {!showMobileMenu && (
+            <Tooltip title="Help">
+              <Button
+                type="text"
+                icon={<QuestionCircleOutlined />}
+                onClick={() => setHelpDrawerVisible(true)}
+                className="help-button"
+              />
+            </Tooltip>
+          )}
           
+          {/* Show user dropdown on desktop only; we already have sign out in mobile sidebar */}
           {currentUser ? (
-            <Dropdown 
-              menu={{ items: userMenuItems }} 
-              trigger={['click']}
-              placement="bottomRight"
-            >
-              <Button type="text" className="user-dropdown-button">
-                <Space>
-                  <Avatar 
-                    size="small" 
-                    icon={<UserOutlined />} 
-                    style={{ backgroundColor: '#1890ff' }}
-                  />
-                  <span className="user-name">
-                    {currentUser.displayName || currentUser.email?.split('@')[0] || 'User'}
-                  </span>
-                </Space>
-              </Button>
-            </Dropdown>
+            !showMobileMenu ? (
+              <Dropdown 
+                menu={{ items: userMenuItems }} 
+                trigger={['click']}
+                placement="bottomRight"
+              >
+                <Button type="text" className="user-dropdown-button">
+                  <Space>
+                    <Avatar 
+                      size="small" 
+                      icon={<UserOutlined />} 
+                      style={{ backgroundColor: '#1890ff' }}
+                    />
+                    <span className="user-name">
+                      {currentUser.displayName || currentUser.email?.split('@')[0] || 'User'}
+                    </span>
+                  </Space>
+                </Button>
+              </Dropdown>
+            ) : (
+              <Avatar 
+                size="small" 
+                icon={<UserOutlined />} 
+                style={{ backgroundColor: '#1890ff' }}
+              />
+            )
           ) : (
             <Button type="link" onClick={() => navigate('/login')}>
               Sign In

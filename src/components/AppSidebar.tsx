@@ -155,15 +155,17 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       theme="light"
       className={`app-sidebar ${mobileView ? 'mobile-sidebar' : ''}`}
       style={{
-        overflow: 'auto',
+        overflow: 'hidden auto',
         height: '100vh',
         position: mobileView ? 'fixed' : 'sticky',
         top: 0,
         left: 0,
         boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
         zIndex: mobileView ? 1001 : 1000,
+        transition: 'all 0.2s',
       }}
       width={240}
+      trigger={null} // Remove the default trigger
     >
       <div 
         className="app-logo flex justify-center items-center h-16 px-4 border-b border-gray-200 cursor-pointer"
@@ -244,7 +246,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       <div 
         className="sidebar-footer"
         style={{
-          position: 'absolute',
+          position: 'sticky',
           bottom: 0,
           width: '100%',
           padding: isSidebarCollapsed ? '16px 0' : '16px',
@@ -253,7 +255,9 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '8px'
+          gap: '8px',
+          background: isDarkMode ? '#141414' : '#ffffff', // Match the sidebar background
+          marginTop: 'auto'
         }}
       >
         {/* Cloud sync status */}
