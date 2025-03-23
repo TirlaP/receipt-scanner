@@ -781,7 +781,7 @@ const EnhancedReceiptsList: React.FC<EnhancedReceiptsListProps> = ({
         {viewMode === 'grid' ? (
           renderGridView()
         ) : (
-          <div className="responsive-table">
+          <div className="responsive-table p-0">
             <Table
               dataSource={filteredReceipts}
               columns={columns}
@@ -796,7 +796,7 @@ const EnhancedReceiptsList: React.FC<EnhancedReceiptsListProps> = ({
               rowSelection={rowSelection}
               expandable={{
                 expandedRowRender: (record) => (
-                  <div className="px-4 py-2">
+                  <div className="p-0">
                     <Title level={5}>Receipt Items</Title>
                     <div className="responsive-table">
                       <Table

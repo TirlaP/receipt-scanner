@@ -39,7 +39,7 @@
   
   /* Table responsiveness */
   .responsive-table {
-    @apply overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0;
+    @apply overflow-x-auto -mx-4 px-0 sm:mx-0 sm:px-0;
   }
   
   /* Truncate text in tables */
@@ -148,6 +148,19 @@
   
   .ant-layout-content {
     @apply w-full overflow-x-hidden;
+  }
+  
+  /* Remove table padding */
+  .ant-table {
+    @apply m-0 p-0;
+  }
+  
+  .ant-table-container {
+    @apply m-0 p-0;
+  }
+  
+  .ant-table-content {
+    @apply m-0 p-0;
   }
   
   .receipt-detail-container,

@@ -12,7 +12,8 @@ import {
   CloudOutlined,
   CloudSyncOutlined,
   UserOutlined,
-  LogoutOutlined
+  LogoutOutlined,
+  CloseOutlined
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -157,31 +158,45 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       width={mobileView ? "100%" : 240}
       trigger={null} // Remove the default trigger
     >
-      <div 
-        className="app-logo flex justify-center items-center h-16 px-4 border-b border-gray-200 cursor-pointer"
-        onClick={() => handleNavigation('/')}
-      >
-        {isSidebarCollapsed && !mobileView ? (
-          <Avatar 
-            shape="square" 
-            size={40} 
-            className="bg-blue-500 flex items-center justify-center"
-          >
-            RS
-          </Avatar>
-        ) : (
-          <div className={`flex items-center ${mobileView ? 'justify-center w-full' : ''}`}>
+      <div className="app-logo flex justify-between items-center h-16 px-4 border-b border-gray-200">
+        <div 
+          className="flex items-center cursor-pointer"
+          onClick={() => handleNavigation('/')}
+        >
+          {isSidebarCollapsed && !mobileView ? (
             <Avatar 
               shape="square" 
-              size={mobileView ? 48 : 40} 
-              className="bg-blue-500 flex items-center justify-center mr-3"
+              size={40} 
+              className="bg-blue-500 flex items-center justify-center"
             >
               RS
             </Avatar>
-            <Title level={4} className={`m-0 text-blue-500 ${mobileView ? 'block' : 'hidden sm:block'}`}>
-              Receipt Scanner
-            </Title>
-          </div>
+          ) : (
+            <div className={`flex items-center ${mobileView ? 'justify-center' : ''}`}>
+              <Avatar 
+                shape="square" 
+                size={mobileView ? 48 : 40} 
+                className="bg-blue-500 flex items-center justify-center mr-3"
+              >
+                RS
+              </Avatar>
+              <Title level={4} className={`m-0 text-blue-500 ${mobileView ? 'block' : 'hidden sm:block'}`}>
+                Receipt Scanner
+              </Title>
+            </div>
+          )}
+        </div>
+        
+        {/* Close button - only shown on mobile */}
+        {mobileView && onClose && (
+          <Button 
+            type="text" 
+            className="flex items-center justify-center" 
+            onClick={onClose}
+            size="large"
+          >
+            <CloseOutlined className="text-lg" />
+          </Button>
         )}
       </div>
       
