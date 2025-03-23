@@ -50,7 +50,7 @@ jobs:
           
           # Also create a script to directly modify the file after build
           mkdir -p scripts
-          cat > scripts/inject-firebase-config.js << 'EOF'
+          cat > scripts/inject-firebase-config.cjs << 'EOF'
           const fs = require('fs');
           const path = require('path');
 
