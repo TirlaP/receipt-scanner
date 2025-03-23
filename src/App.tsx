@@ -25,8 +25,7 @@ import Register from './pages/auth/Register';
 // Context
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
-// Styles
-import './styles/global.css';
+// No external styles needed - we use Tailwind directly
 
 // Protected route component
 const ProtectedRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
