@@ -38,5 +38,4 @@
   }
 }
 
-/* Import global styles */
-@import './styles/global.css';
+/* Global styles imported in main.tsx instead */
