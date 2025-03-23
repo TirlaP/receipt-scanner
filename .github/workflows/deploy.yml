@@ -12,8 +12,6 @@ on:
         type: choice
         options:
         - github-pages
-=======
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
