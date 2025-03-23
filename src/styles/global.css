@@ -164,7 +164,7 @@ html, body {
   }
   
   .ant-table-tbody > tr > td {
-    padding: 12px 8px;
+    padding: 8px;
   }
   
   .ant-pagination-item {
@@ -174,19 +174,63 @@ html, body {
   }
 }
 
-/* Better touch targets for mobile */
+/* Table text truncation */
+.truncate-text {
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.truncate-text-sm {
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Fix decimal precision for quantity values */
+.decimal-value {
+  display: inline-block;
+}
+
+/* Fix table width on mobile */
+.responsive-table .ant-table-cell {
+  word-break: normal;
+  white-space: nowrap;
+}
+
+/* Form elements sizing - keep consistent across devices */
+.ant-btn,
+.ant-select-selector,
+.ant-input,
+.ant-pagination-item,
+.ant-radio-button-wrapper {
+  min-height: 32px;
+}
+
+.ant-select-selector {
+  padding: 0 11px;
+  display: flex;
+  align-items: center;
+}
+
+/* Ensure text doesn't scale up on mobile */
 @media (max-width: 767px) {
-  .ant-btn,
-  .ant-select-selector,
-  .ant-input,
-  .ant-pagination-item,
-  .ant-radio-button-wrapper {
-    min-height: 40px;
+  body {
+    font-size: 14px;
   }
   
-  .ant-select-selector {
-    padding: 0 11px;
-    display: flex;
-    align-items: center;
+  h1, h2, h3, h4, h5 {
+    font-size: inherit;
+  }
+  
+  .ant-typography {
+    font-size: inherit;
+  }
+  
+  /* Keep font sizes consistent with desktop */
+  .ant-table {
+    font-size: 14px;
   }
 }

@@ -330,15 +330,17 @@ const EnhancedReceiptsList: React.FC<EnhancedReceiptsListProps> = ({
       key: 'storeName',
       render: (text: string, record: Receipt) => (
         <Space direction="vertical" size={0}>
-          <Text strong>{text}</Text>
+          <Text strong className="truncate-text">{text}</Text>
           {record.merchantAddress && (
-            <Text type="secondary" style={{ fontSize: '12px' }}>
+            <Text type="secondary" style={{ fontSize: '12px' }} className="truncate-text">
               {record.merchantAddress}
             </Text>
           )}
         </Space>
       ),
       sorter: (a: Receipt, b: Receipt) => a.storeName.localeCompare(b.storeName),
+      width: 150,
+      ellipsis: true,
     },
     {
       title: 'Date',
@@ -347,6 +349,7 @@ const EnhancedReceiptsList: React.FC<EnhancedReceiptsListProps> = ({
       render: (date: Date) => format(new Date(date), 'dd MMM yyyy'),
       sorter: (a: Receipt, b: Receipt) => new Date(a.date).getTime() - new Date(b.date).getTime(),
       defaultSortOrder: 'descend' as 'descend',
+      width: 100,
     },
     {
       title: 'Total',
@@ -358,6 +361,7 @@ const EnhancedReceiptsList: React.FC<EnhancedReceiptsListProps> = ({
         </Text>
       ),
       sorter: (a: Receipt, b: Receipt) => a.total - b.total,
+      width: 100,
     },
     {
       title: 'Items',
@@ -375,12 +379,12 @@ const EnhancedReceiptsList: React.FC<EnhancedReceiptsListProps> = ({
             {categories.length > 0 && (
               <div>
                 {categories.slice(0, 2).map(category => (
-                  <Tag key={category} color="blue" style={{ marginRight: 4 }}>
+                  <Tag key={category} color="blue" style={{ marginRight: 4 }} className="truncate-text-sm">
                     {category}
                   </Tag>
                 ))}
                 {categories.length > 2 && (
-                  <Tag>+{categories.length - 2} more</Tag>
+                  <Tag>+{categories.length - 2}</Tag>
                 )}
               </div>
             )}
@@ -388,6 +392,7 @@ const EnhancedReceiptsList: React.FC<EnhancedReceiptsListProps> = ({
         );
       },
       responsive: ['md'],
+      width: 120,
     },
     {
       title: 'Tags',
@@ -398,11 +403,11 @@ const EnhancedReceiptsList: React.FC<EnhancedReceiptsListProps> = ({
           {tags.length > 0 ? (
             <Space size={[0, 4]} wrap>
               {tags.slice(0, 2).map(tag => (
-                <Tag color="green" key={tag}>
+                <Tag color="green" key={tag} className="truncate-text-sm">
                   <TagOutlined /> {tag}
                 </Tag>
               ))}
-              {tags.length > 2 && <Tag>+{tags.length - 2} more</Tag>}
+              {tags.length > 2 && <Tag>+{tags.length - 2}</Tag>}
             </Space>
           ) : (
             <Text type="secondary">No tags</Text>
@@ -410,17 +415,19 @@ const EnhancedReceiptsList: React.FC<EnhancedReceiptsListProps> = ({
         </>
       ),
       responsive: ['lg'],
+      width: 120,
     },
     {
       title: 'Actions',
       key: 'actions',
       render: (_: any, record: Receipt) => (
-        <Space>
-          <Tooltip title="View Details">
+        <Space size="small">
+          <Tooltip title="View">
             <Button 
               icon={<EyeOutlined />} 
               onClick={() => navigate(`/receipt/${record.id}`)}
               type="text"
+              size="small"
             />
           </Tooltip>
           
@@ -429,12 +436,13 @@ const EnhancedReceiptsList: React.FC<EnhancedReceiptsListProps> = ({
               icon={<EditOutlined />} 
               onClick={() => navigate(`/receipt/${record.id}`)}
               type="text"
+              size="small"
             />
           </Tooltip>
           
           <Tooltip title="Delete">
             <Popconfirm
-              title="Are you sure you want to delete this receipt?"
+              title="Delete this receipt?"
               onConfirm={() => handleDeleteReceipt(record.id)}
               okText="Yes"
               cancelText="No"
@@ -443,11 +451,14 @@ const EnhancedReceiptsList: React.FC<EnhancedReceiptsListProps> = ({
                 danger 
                 icon={<DeleteOutlined />} 
                 type="text"
+                size="small"
               />
             </Popconfirm>
           </Tooltip>
         </Space>
       ),
+      width: 110,
+      fixed: 'right',
     },
   ];
 

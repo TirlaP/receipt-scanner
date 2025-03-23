@@ -392,9 +392,10 @@ const EnhancedReceiptDetail: React.FC<EnhancedReceiptDetailProps> = ({
       dataIndex: 'quantity',
       key: 'quantity',
       render: (qty: number, record: ReceiptItem) => (
-        <Text>{qty} {record.unit || ''}</Text>
+        <Text>{Number(qty.toFixed(2))} {record.unit || ''}</Text>
       ),
       responsive: ['md'],
+      width: 90,
     },
     {
       title: 'Price',
@@ -855,7 +856,7 @@ const EnhancedReceiptDetail: React.FC<EnhancedReceiptDetailProps> = ({
                   />
                   <div style={{ marginTop: 8 }}>
                     <Text type="secondary">Total Quantity: </Text>
-                    <Text strong>{totalQuantity}</Text>
+                    <Text strong>{Number(totalQuantity.toFixed(2))}</Text>
                   </div>
                   <div style={{ marginTop: 8 }}>
                     <Text type="secondary">Categories: </Text>
