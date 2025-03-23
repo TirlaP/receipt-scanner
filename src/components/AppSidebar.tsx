@@ -146,24 +146,14 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
     }
   ];
 
-  // The sidebar component with conditional styling based on mobile view
+  // The sidebar component with Tailwind styling
   return (
     <Sider
       collapsible={!mobileView}
       collapsed={isSidebarCollapsed}
       onCollapse={handleCollapse}
       theme="light"
-      className={`app-sidebar ${mobileView ? 'mobile-sidebar' : ''}`}
-      style={{
-        overflow: 'hidden auto',
-        height: '100vh',
-        position: mobileView ? 'fixed' : 'sticky',
-        top: 0,
-        left: 0,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-        zIndex: mobileView ? 1001 : 1000,
-        transition: 'all 0.2s',
-      }}
+      className={`app-sidebar overflow-y-auto h-screen ${mobileView ? 'fixed' : 'sticky'} top-0 left-0 shadow-md z-40 transition-all duration-200 ${mobileView ? 'z-50' : 'z-30'}`}
       width={240}
       trigger={null} // Remove the default trigger
     >
@@ -195,43 +185,32 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         )}
       </div>
       
-      {/* User info section */}
+      {/* User info section - visible on mobile or non-collapsed sidebar */}
       {!isSidebarCollapsed && currentUser && (
-        <div 
-          className="user-info"
-          style={{
-            padding: '16px',
-            borderBottom: '1px solid #f0f0f0',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-          }}
-        >
+        <div className="p-4 border-b border-gray-200 flex flex-col items-center md:hidden">
           <Avatar 
-            size={mobileView ? 64 : 48}
+            size={64}
             icon={<UserOutlined />}
-            style={{ backgroundColor: '#1890ff', marginBottom: 8 }}
+            className="bg-blue-500 mb-2"
           />
-          <Text strong style={{ marginBottom: 4 }}>
+          <Text strong className="mb-1">
             {currentUser.displayName || currentUser.email?.split('@')[0] || 'User'}
           </Text>
-          <Text type="secondary" style={{ fontSize: '12px' }}>
+          <Text type="secondary" className="text-xs">
             {currentUser.email}
           </Text>
           
-          {mobileView && (
-            <div style={{ marginTop: 16, width: '100%' }}>
-              <Button 
-                type="primary" 
-                danger 
-                icon={<LogoutOutlined />} 
-                onClick={handleSignOut}
-                block
-              >
-                Sign Out
-              </Button>
-            </div>
-          )}
+          <div className="mt-4 w-full">
+            <Button 
+              type="primary" 
+              danger 
+              icon={<LogoutOutlined />} 
+              onClick={handleSignOut}
+              block
+            >
+              Sign Out
+            </Button>
+          </div>
         </div>
       )}
       
@@ -244,34 +223,15 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       />
       
       <div 
-        className="sidebar-footer"
-        style={{
-          position: 'sticky',
-          bottom: 0,
-          width: '100%',
-          padding: isSidebarCollapsed ? '16px 0' : '16px',
-          borderTop: '1px solid #f0f0f0',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '8px',
-          background: isDarkMode ? '#141414' : '#ffffff', // Match the sidebar background
-          marginTop: 'auto'
-        }}
+        className={`sidebar-footer sticky bottom-0 w-full ${isSidebarCollapsed ? 'py-4' : 'p-4'} border-t border-gray-200 flex flex-col items-center justify-center gap-2 ${isDarkMode ? 'bg-gray-900' : 'bg-white'} mt-auto`}
       >
         {/* Cloud sync status */}
         {currentUser && (
           <Tooltip title={`${isSidebarCollapsed ? 'Cloud sync ' : ''}enabled`}>
             <Badge status="success" dot={true}>
-              <CloudSyncOutlined 
-                style={{ 
-                  fontSize: 16, 
-                  color: '#52c41a' 
-                }} 
-              />
+              <CloudSyncOutlined className="text-base text-green-500" />
               {!isSidebarCollapsed && (
-                <Text style={{ marginLeft: 8 }}>Cloud Sync</Text>
+                <Text className="ml-2">Cloud Sync</Text>
               )}
             </Badge>
           </Tooltip>
@@ -280,23 +240,19 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         {/* Dark mode toggle */}
         <Tooltip title={`${isSidebarCollapsed ? 'Toggle ' : ''}Dark Mode`}>
           <div 
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              cursor: 'pointer',
-            }}
+            className="flex items-center cursor-pointer"
             onClick={toggleDarkMode}
           >
             {isDarkMode ? (
-              <BulbFilled style={{ fontSize: 16, color: '#faad14' }} />
+              <BulbFilled className="text-base text-yellow-500" />
             ) : (
-              <BulbOutlined style={{ fontSize: 16 }} />
+              <BulbOutlined className="text-base" />
             )}
             {!isSidebarCollapsed && (
               <Switch 
                 checked={isDarkMode}
                 size="small"
-                style={{ marginLeft: 8 }}
+                className="ml-2"
               />
             )}
           </div>

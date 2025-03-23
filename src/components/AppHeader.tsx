@@ -99,7 +99,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
 
   return (
     <Header 
-      className="bg-white shadow-sm sticky top-0 z-50 px-4 flex justify-between items-center h-16"
+      className="bg-white shadow-sm sticky top-0 z-40 px-4 flex justify-between items-center h-16"
     >
       <div className="flex items-center">
         {/* Only show menu toggle on mobile */}
@@ -156,9 +156,9 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             </Tooltip>
           )}
           
-          {/* Show user dropdown on desktop only; we already have sign out in mobile sidebar */}
+          {/* User dropdown and login button */}
           {currentUser ? (
-            !showMobileMenu ? (
+            <div className="hidden md:block">
               <Dropdown 
                 menu={{ items: userMenuItems }} 
                 trigger={['click']}
@@ -169,7 +169,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
                     <Avatar 
                       size="small" 
                       icon={<UserOutlined />} 
-                      style={{ backgroundColor: '#1890ff' }}
+                      className="bg-blue-500"
                     />
                     <span className="user-name">
                       {currentUser.displayName || currentUser.email?.split('@')[0] || 'User'}
@@ -177,13 +177,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
                   </Space>
                 </Button>
               </Dropdown>
-            ) : (
-              <Avatar 
-                size="small" 
-                icon={<UserOutlined />} 
-                style={{ backgroundColor: '#1890ff' }}
-              />
-            )
+            </div>
           ) : (
             <Button type="link" onClick={() => navigate('/login')}>
               Sign In

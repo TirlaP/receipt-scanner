@@ -84,7 +84,7 @@ const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({ children }) => {
           />
         )}
         
-        {/* Mobile drawer sidebar with proper styling */}
+        {/* Mobile drawer sidebar with proper styling using className where possible */}
         {mobileView && (
           <Drawer
             placement="left"
@@ -92,23 +92,11 @@ const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({ children }) => {
             onClose={() => setDrawerVisible(false)}
             open={drawerVisible}
             width={280}
+            rootClassName="drawer-no-padding"
+            className="p-0"
+            contentWrapperStyle={{ boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)' }}
+            maskStyle={{ backdropFilter: 'blur(2px)' }}
             bodyStyle={{ padding: 0 }}
-            styles={{
-              body: {
-                padding: 0,
-              },
-              mask: {
-                backdropFilter: 'blur(2px)'
-              },
-              // Make drawer better integrated with the app
-              wrapper: {
-                top: 0,
-                height: '100%',
-              },
-              content: {
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-              }
-            }}
             maskClosable={true}
           >
             <AppSidebar 
@@ -126,7 +114,7 @@ const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({ children }) => {
             onMobileMenuToggle={toggleDrawer}
           />
           <Content 
-            className={`bg-gray-50 dark:bg-gray-900
+            className={`bg-gray-50
               ${mobileView ? 'p-4' : 'p-6'} 
               min-h-[calc(100vh-64px)]
               ${isScanningPage && mobileView ? 'pb-24' : ''}
